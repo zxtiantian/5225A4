@@ -65,6 +65,3 @@ npm run dev
 - **History**: (If enabled) View your recognition history from the profile menu.
 
 
-## License
-
-MIT 
