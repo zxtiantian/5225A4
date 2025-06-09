@@ -203,4 +203,36 @@ def bulk_delete(event):
                 table.delete_item(Key={"fileKey": item["fileKey"]})
     return {"status": "ok"}
 
+def lambda_handler(event, context):
+    print('lambda started')
+    print('event:', event)
+    try:
+        path = event.get("rawPath") or event.get("path") or ""
+        print('path:', path)
+        result = {}
+        if "/search_by_tags" in path:
+            result = search_by_tags(event)
+        elif "/search_by_species" in path:
+            result = search_by_species(event)
+        elif "/full_image_by_thumbnail" in path:
+            result = full_image_by_thumbnail(event)
+        elif "/bulk_tag" in path:
+            result = bulk_tag(event)
+        elif "/bulk_delete" in path:
+            result = bulk_delete(event)
+        else:
+            result = {"error": "Unknown API path"}
+        print('final result:', result)
+        return {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps(result, default=decimal_to_float)
+        }
+    except Exception as e:
+        print('Exception in lambda_handler:', str(e))
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": str(e)})
+        } 
 
