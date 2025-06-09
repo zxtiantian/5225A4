@@ -185,4 +185,20 @@ def bulk_tag(event):
                 table.put_item(Item=item)
     return {"status": "ok"}
 
-
+def bulk_delete(event):
+    print('bulk_delete event:', event)
+    body = json.loads(event["body"])
+    urls = body["urls"]
+    for url in urls:
+        # Deleting S3 Files
+        if url.startswith("https://"):
+            parts = url.replace("https://", "").split("/", 1)
+            bucket = parts[0].split(".")[0]
+            key = parts[1]
+            s3.delete_object(Bucket=bucket, Key=key)
+        # Deleting DynamoDB Records
+        resp = table.scan()
+        for item in resp.get("Items", []):
+            if item.get("thumbnailUrl") == url or item.get("resultFile") == url:
+                table.delete_item(Key={"fileKey": item["fileKey"]})
+    return {"status": "ok"}
