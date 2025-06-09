@@ -1,0 +1,14 @@
+FROM amazon/aws-lambda-python:3.9
+
+# Install torch (CPU-only) via extra-index-url (so that NVIDIA dependencies are not pulled in)
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu torch
+
+# Install ultralytics (with --no-deps) so that torch is not re-installed (and supervision, opencv-python-headless, numpy, boto3)
+RUN pip install --no-cache-dir --no-deps ultralytics supervision opencv-python-headless numpy boto3
+
+# Copy from the current build context (i.e. the directory where you run docker build) into /var/task
+COPY ./lambda_image.py /var/task/
+COPY ./birds_detection.py /var/task/
+
+# Set the CMD to your Lambda handler
+CMD [ "lambda_image.lambda_handler" ] 
