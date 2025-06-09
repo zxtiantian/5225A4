@@ -202,3 +202,5 @@ def bulk_delete(event):
             if item.get("thumbnailUrl") == url or item.get("resultFile") == url:
                 table.delete_item(Key={"fileKey": item["fileKey"]})
     return {"status": "ok"}
+
+
