@@ -64,11 +64,6 @@ npm run dev
 - **Subscribe**: On the Subscribe page, enter your email and select bird species to receive notifications.
 - **History**: (If enabled) View your recognition history from the profile menu.
 
-## Screenshots
-
-![Upload Page](screenshots/upload.png)
-![Search Page](screenshots/search.png)
-![Subscribe Page](screenshots/subscribe.png)
 
 ## License
 
